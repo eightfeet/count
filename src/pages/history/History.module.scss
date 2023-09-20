@@ -1,0 +1,30 @@
+.printbutton {
+  @media print {
+    display: none;
+  }
+}
+
+.wrap {
+}
+
+.page {
+  @media print {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 100vh;
+  }
+}
+
+.item {
+  margin-bottom: 10px;
+  @media print {
+    width: 30vw;
+    font-size: var(--adm-font-size-8);
+    page-break-inside: avoid;
+  }
+}
+
+.footer {
+  font-size: var(--adm-font-size-5);
+}
