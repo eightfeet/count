@@ -4,20 +4,22 @@
   }
 }
 
-.wrap {
-}
-
 .page {
+  margin-bottom: 100PX;
   @media print {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    min-height: 100vh;
   }
 }
 
 .item {
   margin-bottom: 10px;
+  width: 180px;
+  @media (max-width: 600px) {
+    width: 40vw;
+  }
+  
   @media print {
     width: 30vw;
     font-size: var(--adm-font-size-8);
@@ -27,4 +29,24 @@
 
 .footer {
   font-size: var(--adm-font-size-5);
+}
+
+.result {
+  display: none;
+  @media print {
+    display: block;
+  }
+}
+
+.index {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: smaller;
+  line-height: 1;
+  color: #555;
+  width: 20PX;
+  height: 20PX;
+  border-radius: 30PX;
+  border: 1px solid #555;
 }
