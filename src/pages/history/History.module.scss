@@ -10,6 +10,8 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    page-break-after: always;
+    font-size: larger;
   }
 }
 
