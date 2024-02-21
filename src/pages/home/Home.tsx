@@ -100,7 +100,7 @@ function Home() {
         <Form.Item label="题数" name="num" required>
           <Stepper min={1} max={100} digits={0} />
         </Form.Item>
-        <Form.Item label="题数" name="displayExerciseKey" required valuePropName="checked">
+        <Form.Item label="打印答案" name="displayExerciseKey" initialValue={true} required valuePropName="checked">
           <Switch />
         </Form.Item>
       </Form>
