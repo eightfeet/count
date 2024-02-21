@@ -5,10 +5,10 @@ import { useSnapshot } from "valtio";
 import { runningTime } from "~/store";
 import { useNavigate } from "react-router-dom";
 
-interface Props {}
+interface Props { }
 
 const History: React.FC<Props> = () => {
-  const { history } = useSnapshot(runningTime);
+  const { history, filter } = useSnapshot(runningTime);
   const navigator = useNavigate();
 
   return (
@@ -43,19 +43,22 @@ const History: React.FC<Props> = () => {
               ))}
             </Space>
           </div>
-          <div className={s.result}>
-            <Divider>答案</Divider>
-            <Space block wrap>
-              {item.subject?.map((el, index) => (
-                <div className={s.item}>
-                  <span className={s.index}>{index + 1}</span> {el.equationStr}
-                  <span style={{ fontWeight: "bolder" }}>
-                    &nbsp;{el.result}
-                  </span>
-                </div>
-              ))}
-            </Space>
-          </div>
+          {
+            filter?.displayExerciseKey ? <div className={s.result}>
+              <Divider>答案</Divider>
+              <Space block wrap>
+                {item.subject?.map((el, index) => (
+                  <div className={s.item}>
+                    <span className={s.index}>{index + 1}</span> {el.equationStr}
+                    <span style={{ fontWeight: "bolder" }}>
+                      &nbsp;{el.result}
+                    </span>
+                  </div>
+                ))}
+              </Space>
+            </div> : null
+          }
+
         </div>
       ))}
     </div>

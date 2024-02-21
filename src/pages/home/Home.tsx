@@ -1,4 +1,4 @@
-import { Button, Form, Selector, Slider, Stepper, Toast } from "antd-mobile";
+import { Button, Form, Selector, Slider, Stepper, Switch, Toast } from "antd-mobile";
 import { Filter, runningTime } from "~/store";
 import { useCallback } from "react";
 import { useSnapshot } from "valtio";
@@ -90,29 +90,18 @@ function Home() {
         </Form.Item>
         <Form.Item label="范围" name="range" required>
           <Slider
-            step={10}
+            step={1}
             min={1}
             max={100}
-            marks={{
-              1: 1,
-              10: 10,
-              20: 20,
-              30: 30,
-              40: 40,
-              50: 50,
-              60: 60,
-              70: 70,
-              80: 80,
-              90: 90,
-              100: 100,
-            }}
-            ticks
             range
             onAfterChange={toastValue}
           />
         </Form.Item>
         <Form.Item label="题数" name="num" required>
           <Stepper min={1} max={100} digits={0} />
+        </Form.Item>
+        <Form.Item label="题数" name="displayExerciseKey" required valuePropName="checked">
+          <Switch />
         </Form.Item>
       </Form>
     </>

@@ -5,6 +5,7 @@ export interface Filter {
   times: number;
   range: number[];
   num: number;
+  displayExerciseKey: boolean
 }
 
 export interface Subject {
