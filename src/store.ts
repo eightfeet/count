@@ -6,6 +6,7 @@ export interface Filter {
   range: number[];
   num: number;
   displayExerciseKey: boolean
+  collections: number;
 }
 
 export interface Subject {

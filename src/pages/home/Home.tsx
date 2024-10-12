@@ -3,8 +3,8 @@ import { Filter, runningTime } from "~/store";
 import { useCallback } from "react";
 import { useSnapshot } from "valtio";
 import { createTest } from "~/helper";
-import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
+import dayjs from "dayjs";
 function Home() {
   const { filter } = useSnapshot(runningTime);
   const navigator = useNavigate();
@@ -23,15 +23,23 @@ function Home() {
   const onStart = useCallback(
     (data: Filter) => {
       runningTime.filter = data;
-      const subject = createTest(data);
-      runningTime.history = [
+      const collections = data.collections || 30;
+      const newhistory = [
         ...(runningTime.history || []),
-        {
+      ];
+      for (let index = 0; index < collections; index++) {
+        const subject = createTest(data.num, data.times, data.range as any, data.methodRange);
+        newhistory.push({
           startAt: dayjs().format("YYYY-MM-DD HH:mm:ss"),
           subject,
-        },
-      ];
+        });
+      }
 
+      runningTime.history = newhistory;
+
+      console.log('newhistory', newhistory);
+      
+      
       navigator("/history");
     },
     [navigator]
@@ -41,8 +49,9 @@ function Home() {
     <>
       <Form
         form={form}
-        initialValues={filter}
+        initialValues={{...filter, displayExerciseKey: true}}
         onFinish={onStart}
+        
         footer={
           <>
             <Button block type="submit" color="primary">
@@ -92,15 +101,18 @@ function Home() {
           <Slider
             step={1}
             min={1}
-            max={100}
+            max={300}
             range
             onAfterChange={toastValue}
           />
         </Form.Item>
         <Form.Item label="题数" name="num" required>
+          <Stepper min={1} max={300} digits={0} />
+        </Form.Item>
+        <Form.Item label="套数" name="collections" required>
           <Stepper min={1} max={100} digits={0} />
         </Form.Item>
-        <Form.Item label="打印答案" name="displayExerciseKey" initialValue={true} required valuePropName="checked">
+        <Form.Item label="打印答案" name="displayExerciseKey" required valuePropName="checked">
           <Switch />
         </Form.Item>
       </Form>

@@ -35,9 +35,9 @@ const History: React.FC<Props> = () => {
         <div className={s.page} key={index}>
           <div>
             <Space block wrap>
-              {item.subject?.map((el, index) => (
-                <div className={s.item}>
-                  <span className={s.index}>{index + 1}</span> {el.equationStr}
+              {item.subject?.map((el, ind) => (
+                <div className={s.item} key={`${index} ${ind}`}>
+                  <span className={s.index}>{ind + 1}</span> {el.equationStr.replace(/\*/g, '×').replace(/\//g, '÷')} =
                   <span>&nbsp;</span>
                 </div>
               ))}
@@ -48,8 +48,8 @@ const History: React.FC<Props> = () => {
               <Divider>答案</Divider>
               <Space block wrap>
                 {item.subject?.map((el, index) => (
-                  <div className={s.item}>
-                    <span className={s.index}>{index + 1}</span> {el.equationStr}
+                  <div className={s.item} key={index}>
+                    <span className={s.index}>{index + 1}</span> {el.equationStr.replace(/\*/g, '×').replace(/\//g, '÷')} =
                     <span style={{ fontWeight: "bolder" }}>
                       &nbsp;{el.result}
                     </span>
