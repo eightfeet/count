@@ -18,65 +18,88 @@ export function createTest(num: number, times: number, range: [number, number], 
         let result = 0;
         let currentResult = 0;
         const usedNumbers = new Set<number>(); // 用于记录已使用的数字
+        let validOperationsCount = 0; // 记录有效运算次数
+
+        // 确保每种运算都有机会被执行
+        const operations = [];
+        for (let i = 0; i < times; i++) {
+            operations.push(methodRange[Math.floor(Math.random() * methodRange.length)]);
+        }
 
         for (let j = 0; j < times; j++) {
             let randomNum = 0;
             do {
                 randomNum = Math.floor(Math.random() * (range[1] - range[0] + 1)) + range[0];
-            } while (randomNum === 0 || usedNumbers.has(randomNum));
+            } while (randomNum === 0 || usedNumbers.has(randomNum)); // 确保随机数不为0且未使用
 
             usedNumbers.add(randomNum);
-            const randomMethodIndex = Math.floor(Math.random() * methodRange.length);
-            const method = methodRange[randomMethodIndex];
+            const method = operations[j]; // 从预先生成的运算中获取
 
             if (j === 0) {
                 currentResult = randomNum;
                 equation += `${randomNum}`;
                 equationStr += `${randomNum}`;
                 equationText += `${randomNum}`;
+                validOperationsCount++; // 第一次运算有效
             } else {
-                switch (method) {
-                    case 1:
-                        currentResult += randomNum;
-                        equation += ` + ${randomNum}`;
-                        equationStr += ` + ${randomNum}`;
-                        equationText += ` + ${randomNum}`;
-                        break;
-                    case 2:
-                        // 确保减法不会使结果小于0
-                        randomNum = Math.min(randomNum, currentResult);
-                        currentResult -= randomNum;
-                        equation += ` - ${randomNum}`;
-                        equationStr += ` - ${randomNum}`;
-                        equationText += ` - ${randomNum}`;
-                        break;
-                    case 3:
-                        currentResult *= randomNum;
-                        equation += ` * ${randomNum}`;
-                        equationStr += ` * ${randomNum}`;
-                        equationText += ` × ${randomNum}`;
-                        break;
-                    case 4:
-                        // 确保除法结果为整数且不小于0
-                        let divisor = Math.max(1, Math.floor(currentResult / (Math.random() * (currentResult + 1))));
-                        if (currentResult % divisor !== 0) { // 如果不是整除
-                            // 调整除数使得结果为整数
-                            divisor = currentResult; // 最简单的方式就是让除数等于当前结果
-                        }
-                        currentResult = Math.floor(currentResult / divisor); // 确保结果为整数
-                        equation += ` / ${divisor}`;
-                        equationStr += ` / ${divisor}`;
-                        equationText += ` ÷ ${divisor}`;
-                        break;
-                    default:
-                        throw new Error('Invalid method');
+                let validOperation = false; // 新增标志位，确保运算有效
+                let attempts = 0; // 尝试次数，避免死循环
+                while (!validOperation && attempts < 100) { // 限制最大尝试次数
+                    attempts++;
+                    switch (method) {
+                        case 1: // 加法
+                            currentResult += randomNum;
+                            equation += ` + ${randomNum}`;
+                            equationStr += ` + ${randomNum}`;
+                            equationText += ` + ${randomNum}`;
+                            validOperation = true; // 运算有效
+                            validOperationsCount++; // 记录有效运算次数
+                            break;
+                        case 2: // 减法
+                            // 确保减法不会使结果小于1
+                            if (currentResult - randomNum > 0) {
+                                currentResult -= randomNum;
+                                equation += ` - ${randomNum}`;
+                                equationStr += ` - ${randomNum}`;
+                                equationText += ` - ${randomNum}`;
+                                validOperation = true; // 运算有效
+                                validOperationsCount++; // 记录有效运算次数
+                            }
+                            break;
+                        case 3: // 乘法
+                            currentResult *= randomNum;
+                            equation += ` * ${randomNum}`;
+                            equationStr += ` * ${randomNum}`;
+                            equationText += ` × ${randomNum}`;
+                            validOperation = true; // 运算有效
+                            validOperationsCount++; // 记录有效运算次数
+                            break;
+                        case 4: // 除法
+                            // 确保除法的两个数不相等且都不为0，并且结果为整数
+                            if (randomNum !== 0 && currentResult !== randomNum && currentResult % randomNum === 0) {
+                                currentResult = Math.floor(currentResult / randomNum); // 确保结果为整数
+                                equation += ` / ${randomNum}`;
+                                equationStr += ` / ${randomNum}`;
+                                equationText += ` ÷ ${randomNum}`;
+                                validOperation = true; // 运算有效
+                                validOperationsCount++; // 记录有效运算次数
+                            }
+                            break;
+                        default:
+                            throw new Error('Invalid method');
+                    }
+                }
+                if (!validOperation) {
+                    // 如果尝试次数超过限制，跳出循环
+                    break;
                 }
             }
         }
 
-        result = currentResult;
-        if (result === 0) continue; // 如果结果为0，重新生成题目
+        // 确保每次运算都有数据且有效运算次数等于指定次数
+        if (currentResult === 0 || usedNumbers.size < times || validOperationsCount < times) continue; // 如果结果为0或没有足够的随机数或有效运算次数不足，重新生成题目
 
+        result = currentResult;
         questions.push({ equation, equationStr, equationText, result });
     }
 
